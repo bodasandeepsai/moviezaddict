@@ -27,10 +27,8 @@ class Homepage extends Component {
             case 'movies':
                 return <Movies setActiveSection={this.setActiveSection} activeSection={activeSection} />;
             case 'tv-shows':
-                // Assuming you will implement a TVShows component later
                 return <Tvseries setActiveSection={this.setActiveSection} activeSection={activeSection}/>;
             case 'about':
-                // Assuming you will implement an About component later
                 return <Info setActiveSection={this.setActiveSection} activeSection={activeSection}/>;
             default:
                 return <Main setActiveSection={this.setActiveSection} activeSection={activeSection} />;
@@ -39,9 +37,11 @@ class Homepage extends Component {
 
     render() {
         return (
-            <div>
+            <div className="main-responsive-container">
                 <Navbar activeSection={this.state.activeSection} setActiveSection={this.setActiveSection} />
-                {this.renderActiveSection()}
+                <div className="main-content-wrapper">
+                    {this.renderActiveSection()}
+                </div>
             </div>
         );
     }

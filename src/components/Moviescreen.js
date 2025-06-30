@@ -11,7 +11,7 @@ const MovieScreen = ({ movie, onBack }) => {
             case 2:
                 return `https://vidsrc.xyz/embed/movie?tmdb=${movie.id}`;
             case 3:
-                return `https://vidsrc.to/embed/movie/${movie.id}`; // Example for server 3, you might have a different URL.
+                return `https://vidsrc.to/embed/movie/${movie.id}`; 
             default:
                 return `https://vidsrc.xyz/embed/movie?tmdb=${movie.id}`;
         }

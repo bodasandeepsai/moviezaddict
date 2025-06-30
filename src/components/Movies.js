@@ -157,7 +157,6 @@ class Movies extends Component {
                     <div className="MovieDetails">
                         <div className="MovieDetailsContent">
                             <img src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`} alt="Movie Poster" />
-
                             <div className='MovieOverview1'>
                                 <ul className="nav nav-pills">
                                     <li className="nav-item">
@@ -171,7 +170,6 @@ class Movies extends Component {
                                     </li>
                                 </ul>
                                 <div className="MovieOverview">
-
                                     {activeTab === 'overview' && (
                                         <div>
                                             <h1>{selectedMovie.title}</h1>
@@ -197,7 +195,7 @@ class Movies extends Component {
                                         <div>
                                             <ul>
                                                 {reviews.map(review => (
-                                                    <div className="review-card">
+                                                    <div className="review-card" key={review.id}>
                                                         <h3>{review.author}</h3>
                                                         <p><strong>Rating:</strong> {review.author_details.rating}</p>
                                                         <p><strong>Date:</strong> {new Date(review.created_at).toLocaleDateString()}</p>
@@ -212,44 +210,41 @@ class Movies extends Component {
                                     <button className="btn btn-primary" onClick={this.watchNow}><i className="fas fa-play"></i> Watch Now</button>
                                     <button className="btn btn-secondary" onClick={() => this.openTrailer(selectedMovie.id)}><i className="fab fa-youtube"></i> Trailer</button>
                                 </div>
-
                             </div>
-
                         </div>
-
-
-
                     </div>
-
-                    <div className="SimilarMovies">
-                        <h1>Similar Movies</h1>
-                        <div className="LatestMoviesContainer">
-                            {similarMovies.map(movie => (
-                                <div key={movie.id} className="card" onClick={() => this.selectMovie(movie.id)}>
-                                    <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} className="card-img-top" alt="Movie Poster" />
-                                    <div className="card-body">
-                                        <h5 className="card-title">{movie.title}</h5>
-                                    </div>
+                    <div className="section-header"><i className="fas fa-film"></i> Similar Movies</div>
+                    <div className="LatestMoviesContainer">
+                        {similarMovies.map(movie => (
+                            <div key={movie.id} className="card card-movie" onClick={() => this.selectMovie(movie.id)}>
+                                <div className="card-img-overlay">
+                                    <span className="card-rating"><i className="fas fa-star"></i> {movie.vote_average?.toFixed(1)}</span>
+                                    <span className="card-year">{movie.release_date?.slice(0,4)}</span>
                                 </div>
-                            ))}
-                        </div>
+                                <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} className="card-img-top" alt="Movie Poster" />
+                                <div className="card-body">
+                                    <h5 className="card-title">{movie.title}</h5>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </>
             );
         }
 
-
-
         return (
             <>
-
+                <div className="section-header"><i className="fas fa-film"></i> Movies</div>
                 <div className='Main'>
-                    <div className='h1heading'>
-                    </div>
+                    <div className='section-header'><i className="fas fa-fire"></i> Latest Movies</div>
                     <div className='LatestMoviesContainer'>
                         {latestMovies && latestMovies.length > 0 ? (
                             latestMovies.map(movie => (
-                                <div key={movie.id} className="card" onClick={() => this.selectMovie(movie.id)}>
+                                <div key={movie.id} className="card card-movie" onClick={() => this.selectMovie(movie.id)}>
+                                    <div className="card-img-overlay">
+                                        <span className="card-rating"><i className="fas fa-star"></i> {movie.vote_average?.toFixed(1)}</span>
+                                        <span className="card-year">{movie.release_date?.slice(0,4)}</span>
+                                    </div>
                                     <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} className="card-img-top" alt="Movie Poster" />
                                     <div className="card-body">
                                         <h5 className="card-title">{movie.title}</h5>
@@ -260,13 +255,15 @@ class Movies extends Component {
                             <p>Loading latest movies...</p>
                         )}
                     </div>
-
-                    <div className='h1heading'>
-                    </div>
+                    <div className='section-header'><i className="fas fa-star"></i> Popular Movies</div>
                     <div className='LatestMoviesContainer'>
                         {popularMovies && popularMovies.length > 0 ? (
                             popularMovies.map(movie => (
-                                <div key={movie.id} className="card" onClick={() => this.selectMovie(movie.id)}>
+                                <div key={movie.id} className="card card-movie" onClick={() => this.selectMovie(movie.id)}>
+                                    <div className="card-img-overlay">
+                                        <span className="card-rating"><i className="fas fa-star"></i> {movie.vote_average?.toFixed(1)}</span>
+                                        <span className="card-year">{movie.release_date?.slice(0,4)}</span>
+                                    </div>
                                     <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} className="card-img-top" alt="Movie Poster" />
                                     <div className="card-body">
                                         <h5 className="card-title">{movie.title}</h5>
@@ -280,7 +277,6 @@ class Movies extends Component {
                 </div>
             </>
         );
-
     }
 }
 

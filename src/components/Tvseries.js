@@ -157,7 +157,6 @@ class Tvseries extends Component {
                     <div className="MovieDetails">
                         <div className="MovieDetailsContent">
                             <img src={`https://image.tmdb.org/t/p/w500${selectedseries.poster_path}`} alt="Movie Poster" />
-
                             <div className='MovieOverview1'>
                                 <ul className="nav nav-pills">
                                     <li className="nav-item">
@@ -171,13 +170,11 @@ class Tvseries extends Component {
                                     </li>
                                 </ul>
                                 <div className="MovieOverview">
-
                                     {activeTab === 'overview' && (
                                         <div>
-                                            <h1>{selectedseries.title}</h1>
+                                            <h1>{selectedseries.name}</h1>
                                             <p>{selectedseries.overview}</p>
-                                            <p><strong>Release Date:</strong> {new Date(selectedseries.release_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                                            <p><strong>Runtime:</strong> {Math.floor(selectedseries.runtime / 60)}hr   {selectedseries.runtime % 60}mins</p>
+                                            <p><strong>Release Date:</strong> {new Date(selectedseries.first_air_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                                             <p><strong>Genre:</strong> {selectedseries.genres.map(genre => genre.name).join(', ')}</p>
                                         </div>
                                     )}
@@ -197,7 +194,7 @@ class Tvseries extends Component {
                                         <div>
                                             <ul>
                                                 {reviews.map(review => (
-                                                    <div className="review-card">
+                                                    <div className="review-card" key={review.id}>
                                                         <h3>{review.author}</h3>
                                                         <p><strong>Rating:</strong> {review.author_details.rating}</p>
                                                         <p><strong>Date:</strong> {new Date(review.created_at).toLocaleDateString()}</p>
@@ -212,75 +209,73 @@ class Tvseries extends Component {
                                     <button className="btn btn-primary" onClick={this.watchNow}><i className="fas fa-play"></i> Watch Now</button>
                                     <button className="btn btn-secondary" onClick={() => this.openTrailer(selectedseries.id)}><i className="fab fa-youtube"></i> Trailer</button>
                                 </div>
-
                             </div>
-
                         </div>
-
-
-
                     </div>
-
-                    <div className="SimilarMovies">
-                        <h1>Similar Tvseries</h1>
-                        <div className="LatestMoviesContainer">
-                            {similarseries.map(series => (
-                                <div key={series.id} className="card" onClick={() => this.selectSeries(series.id)}>
-                                    <img src={`https://image.tmdb.org/t/p/w500${series.poster_path}`} className="card-img-top" alt="Movie Poster" />
-                                    <div className="card-body">
-                                        <h5 className="card-title">{series.title}</h5>
-                                    </div>
+                    <div className="section-header"><i className="fas fa-tv"></i> Similar Series</div>
+                    <div className="LatestSeriesContainer">
+                        {similarseries.map(series => (
+                            <div key={series.id} className="card card-series" onClick={() => this.selectSeries(series.id)}>
+                                <div className="card-img-overlay">
+                                    <span className="card-rating"><i className="fas fa-star"></i> {series.vote_average?.toFixed(1)}</span>
+                                    <span className="card-year">{series.first_air_date?.slice(0,4)}</span>
                                 </div>
-                            ))}
-                        </div>
+                                <img src={`https://image.tmdb.org/t/p/w500${series.poster_path}`} className="card-img-top" alt="Series Poster" />
+                                <div className="card-body">
+                                    <h5 className="card-title">{series.name}</h5>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </>
             );
         }
 
-    
-
         return (
             <>
-
+                <div className="section-header"><i className="fas fa-tv"></i> TV Series</div>
                 <div className='Main'>
-                    <div className='h1heading'>
-                    </div>
-                    <div className='LatestMoviesContainer'>
+                    <div className='section-header'><i className="fas fa-bolt"></i> Latest TV Series</div>
+                    <div className='LatestSeriesContainer'>
                         {latestseries && latestseries.length > 0 ? (
                             latestseries.map(series => (
-                                <div key={series.id} className="card" onClick={() => this.selectSeries(series.id)}>
-                                    <img src={`https://image.tmdb.org/t/p/w500${series.poster_path}`} className="card-img-top" alt="Movie Poster" />
+                                <div key={series.id} className="card card-series" onClick={() => this.selectSeries(series.id)}>
+                                    <div className="card-img-overlay">
+                                        <span className="card-rating"><i className="fas fa-star"></i> {series.vote_average?.toFixed(1)}</span>
+                                        <span className="card-year">{series.first_air_date?.slice(0,4)}</span>
+                                    </div>
+                                    <img src={`https://image.tmdb.org/t/p/w500${series.poster_path}`} className="card-img-top" alt="Series Poster" />
                                     <div className="card-body">
-                                        <h5 className="card-title">{series.title}</h5>
+                                        <h5 className="card-title">{series.name}</h5>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <p>Loading latest movies...</p>
+                            <p>Loading latest series...</p>
                         )}
                     </div>
-
-                    <div className='h1heading'>
-                    </div>
-                    <div className='LatestMoviesContainer'>
+                    <div className='section-header'><i className="fas fa-fire"></i> Popular TV Series</div>
+                    <div className='LatestSeriesContainer'>
                         {popularseries && popularseries.length > 0 ? (
                             popularseries.map(series => (
-                                <div key={series.id} className="card" onClick={() => this.selectSeries(series.id)}>
-                                    <img src={`https://image.tmdb.org/t/p/w500${series.poster_path}`} className="card-img-top" alt="Movie Poster" />
+                                <div key={series.id} className="card card-series" onClick={() => this.selectSeries(series.id)}>
+                                    <div className="card-img-overlay">
+                                        <span className="card-rating"><i className="fas fa-star"></i> {series.vote_average?.toFixed(1)}</span>
+                                        <span className="card-year">{series.first_air_date?.slice(0,4)}</span>
+                                    </div>
+                                    <img src={`https://image.tmdb.org/t/p/w500${series.poster_path}`} className="card-img-top" alt="Series Poster" />
                                     <div className="card-body">
-                                        <h5 className="card-title">{series.title}</h5>
+                                        <h5 className="card-title">{series.name}</h5>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <p>Loading popular movies...</p>
+                            <p>Loading popular series...</p>
                         )}
                     </div>
                 </div>
             </>
         ) ;
-
     }
 }
 

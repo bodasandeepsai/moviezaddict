@@ -5,6 +5,8 @@ import SeriesOverview from './SeriesOverview';
 import Tvscreen from './Tvscreen';
 
 class Search extends Component {
+    debounceTimeout = null;
+
     state = {
         query: '',
         searchResults: [],
@@ -20,14 +22,17 @@ class Search extends Component {
         watchNow: false,
     };
 
-    handleInputChange = (event) => {
-        const query = event.target.value;
-        this.setState({ query });
-        this.fetchMovies(query, 1);
+    handleInputChange = (e) => {
+        const value = e.target.value;
+        this.setState({ query: value });
+        if (this.debounceTimeout) clearTimeout(this.debounceTimeout);
+        this.debounceTimeout = setTimeout(() => {
+            this.performSearch(value);
+        }, 400);
     };
 
-    fetchMovies = (query, page) => {
-        fetch(`https://api.themoviedb.org/3/search/multi?include_adult=false&language=en-US&query=${query}&api_key=2d48155563c793ef5db13c847618c643&page=${page}`)
+    performSearch = (value) => {
+        fetch(`https://api.themoviedb.org/3/search/multi?include_adult=false&language=en-US&query=${value}&api_key=2d48155563c793ef5db13c847618c643&page=1`)
             .then(response => response.json())
             .then(data => {
                 this.setState({
@@ -41,7 +46,7 @@ class Search extends Component {
 
     goToPage = (page) => {
         const { query } = this.state;
-        this.fetchMovies(query, page);
+        this.performSearch(query);
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
@@ -126,6 +131,7 @@ class Search extends Component {
     render() {
         const { query, searchResults, currentPage, totalPages, selectedMovie, selectedSeries, cast, reviews, activeTab, watchNow, selectedMovieId, selectedSeriesId } = this.state;
         const pageNumbers = [];
+        const DEFAULT_POSTER = 'https://www.movienewz.com/img/films/poster-holder.jpg'; // or any stylish placeholder
 
         if (selectedMovie && !watchNow) {
             return (
@@ -176,22 +182,24 @@ class Search extends Component {
                 <div className="Search">
                     <input
                         type="text"
-                        value={query}
+                        value={this.state.query}
                         onChange={this.handleInputChange}
                         placeholder="Search any movies or series..."
                     />
                 </div>
-                <div className="searchItemscontainer">
-                    <div className="SearchResults">
-                        {searchResults.map(item => (
-                            <div key={item.id} className="card" onClick={() => this.selectItem(item)}>
-                                <img src={`https://image.tmdb.org/t/p/w500${item.poster_path}`} className="card-img-top" alt="Poster" />
-                                <div className="card-body">
-                                    <h5 className="card-title">{item.title || item.name}</h5>
-                                </div>
+                <div className="LatestMoviesContainer">
+                    {this.state.searchResults.map(item => (
+                        <div key={item.id} className="card card-movie" onClick={() => this.selectItem(item)}>
+                            <div className="card-img-overlay">
+                                <span className="card-rating"><i className="fas fa-star"></i> {item.vote_average?.toFixed(1)}</span>
+                                <span className="card-year">{(item.release_date || item.first_air_date)?.slice(0,4)}</span>
                             </div>
-                        ))}
-                    </div>
+                            <img src={item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : DEFAULT_POSTER} className="card-img-top" alt="Poster" />
+                            <div className="card-body">
+                                <h5 className="card-title">{item.title || item.name}</h5>
+                            </div>
+                        </div>
+                    ))}
                 </div>
                 <div className="Pagination">
                     {currentPage > 1 && (
